@@ -26,7 +26,7 @@ const LogIn = ({navigation}) => {
           text="Log In"
           color="#FFFFFF"
           background="#373737"
-          onPress={() => navigation.replace('Menu')}
+          onPress={() => navigation.replace('MainApp')}
         />
         <Text style={styles.forgot}>Forgot your password?</Text>
 
