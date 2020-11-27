@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,8 +11,58 @@ import Button from '../../component/Button';
 import FormInput from '../../component/FormInput';
 import Header from '../../component/Header';
 import NullPhoto from '../../assets/image/null-photo.png';
+import ImagePicker from 'react-native-image-picker';
+import Loading from '../../component/Loading';
+import Firebase from '../../services/Fire';
+import {storeData} from '../../services/storage';
 
 const CreateAccount = ({navigation}) => {
+  const [name, SetName] = useState('');
+  const [email, SetEmail] = useState('');
+  const [password, SetPassword] = useState('');
+  const [province, SetProvince] = useState('');
+  const [city, SetCity] = useState('');
+  const [loading, SetLoading] = useState(false);
+
+  const onCreate = () => {
+    SetLoading(true);
+    const data = {
+      name: name,
+      email: email,
+      province: province,
+      city: city,
+    };
+
+    Firebase.auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then((res) => {
+        Firebase.database().ref(`users/${res.user.uid}`).set(data);
+        // showMessage({
+        //   message: 'Success',
+        //   type: 'success',
+        // });
+        console.log('succes', res);
+        SetLoading(false);
+        storeData('user', data);
+        navigation.replace('MainApp');
+      })
+      .catch((error) => {
+        console.log('error', error);
+        const errorMessage = error.message;
+        // showMessage({
+        //   message: errorMessage,
+        //   type: 'danger',
+        // });
+        SetLoading(false);
+      });
+  };
+
+  const getImage = () => {
+    ImagePicker.launchImageLibrary({quality: 0.5}, (res) => {
+      console.log(res);
+    });
+  };
+
   return (
     <>
       <Header />
@@ -25,25 +75,34 @@ const CreateAccount = ({navigation}) => {
             }}>
             <Text style={styles.login}>Create Account</Text>
             <View style={styles.border} />
-            <TouchableOpacity>
+            <TouchableOpacity onPress={getImage}>
               <Image source={NullPhoto} style={styles.avatar} />
             </TouchableOpacity>
           </View>
-          <FormInput text="Your Name" />
+          <FormInput
+            text="Your Name"
+            onChangeText={(value) => SetName(value)}
+          />
           <View style={{marginBottom: 10}} />
-          <FormInput text="E-mail" />
+          <FormInput text="E-mail" onChangeText={(value) => SetEmail(value)} />
           <View style={{marginBottom: 10}} />
-          <FormInput text="Password" />
+          <FormInput
+            text="Password"
+            onChangeText={(value) => SetPassword(value)}
+          />
           <View style={{marginBottom: 10}} />
-          <FormInput text="Province" />
+          <FormInput
+            text="Province"
+            onChangeText={(value) => SetProvince(value)}
+          />
           <View style={{marginBottom: 10}} />
-          <FormInput text="City" />
+          <FormInput text="City" onChangeText={(value) => SetCity(value)} />
           <View style={{marginBottom: 20}} />
           <Button
             text="Create"
             color="#FFFFFF"
             background="#373737"
-            onPress={() => navigation.replace('Menu')}
+            onPress={onCreate}
           />
           <TouchableOpacity
             style={{
@@ -67,6 +126,7 @@ const CreateAccount = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      {loading && <Loading />}
     </>
   );
 };

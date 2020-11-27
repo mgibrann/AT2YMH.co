@@ -1,10 +1,42 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Button from '../../component/Button';
 import FormInput from '../../component/FormInput';
 import Header from '../../component/Header';
+import Loading from '../../component/Loading';
+import Firebase from '../../services/Fire';
 
 const LogIn = ({navigation}) => {
+  const [email, SetEmail] = useState('');
+  const [password, SetPassword] = useState('');
+  const [loading, SetLoading] = useState(false);
+
+  const onLogIn = () => {
+    const data = {};
+
+    SetLoading(true);
+    Firebase.auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((res) => {
+        Firebase.database()
+          .ref(`users/${res.user.uid}`)
+          .once('value')
+          .then((res) => {
+            if (res.val()) {
+              SetLoading(false);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        navigation.replace('MainApp');
+      })
+      .catch((err) => {
+        console.log(err);
+        SetLoading(false);
+      });
+  };
   return (
     <>
       <Header />
@@ -18,21 +50,26 @@ const LogIn = ({navigation}) => {
           <Text style={styles.login}>Login</Text>
           <View style={styles.border} />
         </View>
-        <FormInput text="E-mail" />
+        <FormInput text="E-mail" onChangeText={(value) => SetEmail(value)} />
         <View style={{marginBottom: 20}} />
-        <FormInput text="Password" />
+        <FormInput
+          text="Password"
+          onChangeText={(value) => SetPassword(value)}
+        />
         <View style={{marginBottom: 40}} />
         <Button
           text="Log In"
           color="#FFFFFF"
           background="#373737"
-          onPress={() => navigation.replace('MainApp')}
+          onPress={onLogIn}
         />
         <Text style={styles.forgot}>Forgot your password?</Text>
 
         <View style={{alignItems: 'center'}}>
           <View style={styles.border2} />
-          <TouchableOpacity style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={{flexDirection: 'row'}}
+            onPress={() => navigation.navigate('CreateAccount')}>
             <Text style={{fontFamily: 'Roboto-Regular', fontSize: 14}}>
               You don't have an account?{' '}
             </Text>
@@ -48,6 +85,7 @@ const LogIn = ({navigation}) => {
           </TouchableOpacity>
         </View>
       </View>
+      {loading && <Loading />}
     </>
   );
 };
