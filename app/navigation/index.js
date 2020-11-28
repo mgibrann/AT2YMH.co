@@ -28,7 +28,7 @@ const MainApp = () => {
 };
 const Navigation = () => {
   return (
-    <Stack.Navigator initialRouteName="MainApp">
+    <Stack.Navigator initialRouteName="SplashScreen">
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}

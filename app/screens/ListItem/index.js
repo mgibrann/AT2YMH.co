@@ -2,9 +2,11 @@ import React, {useState, useEffect} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import Header from '../../component/Header';
 import Item from '../../component/Item';
-import AppleWatch from '../../assets/image/applewatch.png';
 import CatalogItem from '../../component/CatalogItem';
 import Firebase from '../../services/Fire';
+
+import {LogBox} from 'react-native';
+LogBox.ignoreLogs(['Setting a timer']);
 
 const ListItem = ({navigation}) => {
   const [largecatalog, SetLargeCatalog] = useState('');

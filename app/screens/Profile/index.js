@@ -1,9 +1,41 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
+import Button from '../../component/Button';
 import Header from '../../component/Header';
-import NullPhoto from '../../assets/image/null-photo.png';
+import Firebase from '../../services/Fire';
+import {getData} from '../../services/storage';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
+  const [data, SetData] = useState();
+  const [dataload, SetDataLoad] = useState(false);
+
+  useEffect(() => {
+    getData('user').then((res) => {
+      SetData(res);
+      SetDataLoad(true);
+    });
+  }, []);
+
+  const LogOut = () => {
+    Firebase.auth()
+      .signOut()
+      .then(() => {
+        showMessage({
+          message: 'Succes Sign Out',
+          type: 'success',
+        });
+        navigation.replace('Home');
+      })
+      .catch((err) => {
+        const errormessage = err.message;
+        showMessage({
+          message: errormessage,
+          type: 'danger',
+        });
+      });
+  };
+
   return (
     <>
       <Header />
@@ -11,22 +43,32 @@ const Profile = () => {
         <View style={{alignItems: 'center'}}>
           <Text style={styles.profile}>User Profile</Text>
           <View style={styles.border} />
-          <TouchableOpacity>
-            <Image source={NullPhoto} style={styles.avatar} />
-          </TouchableOpacity>
         </View>
-        <View style={styles.wraptext}>
-          <Text style={styles.title}>FullName</Text>
-          <Text style={styles.desc}>Anjay Gurinjay</Text>
-        </View>
-        <View style={styles.wraptext}>
-          <Text style={styles.title}>FullName</Text>
-          <Text style={styles.desc}>Anjay Gurinjay</Text>
-        </View>
-        <View style={styles.wraptext}>
-          <Text style={styles.title}>FullName</Text>
-          <Text style={styles.desc}>Anjay Gurinjay</Text>
-        </View>
+        {dataload && (
+          <View>
+            <TouchableOpacity style={{alignItems: 'center'}}>
+              <Image source={{uri: data.photo}} style={styles.avatar} />
+            </TouchableOpacity>
+            <View style={styles.wraptext}>
+              <Text style={styles.title}>FullName</Text>
+              <Text style={styles.desc}>{data.name}</Text>
+            </View>
+            <View style={styles.wraptext}>
+              <Text style={styles.title}>Email</Text>
+              <Text style={styles.desc}>{data.email}</Text>
+            </View>
+            <View style={styles.wraptext}>
+              <Text style={styles.title}>Province</Text>
+              <Text style={styles.desc}>{data.province}</Text>
+            </View>
+            <View style={styles.wraptext}>
+              <Text style={styles.title}>City</Text>
+              <Text style={styles.desc}>{data.city}</Text>
+            </View>
+          </View>
+        )}
+        <View style={{height: 20}} />
+        <Button text="SignOut" onPress={LogOut} />
       </View>
     </>
   );

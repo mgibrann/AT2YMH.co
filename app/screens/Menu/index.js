@@ -1,8 +1,10 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import Header from '../../component/Header';
-
 import Item from '../../component/Item';
+
+import {LogBox} from 'react-native';
+LogBox.ignoreLogs(['Setting a timer']);
 
 const Menu = () => {
   return (

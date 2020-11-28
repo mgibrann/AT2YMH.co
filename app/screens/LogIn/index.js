@@ -1,10 +1,15 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
 import Button from '../../component/Button';
 import FormInput from '../../component/FormInput';
 import Header from '../../component/Header';
 import Loading from '../../component/Loading';
 import Firebase from '../../services/Fire';
+import {storeData} from '../../services/storage';
+
+import {LogBox} from 'react-native';
+LogBox.ignoreLogs(['Setting a timer']);
 
 const LogIn = ({navigation}) => {
   const [email, SetEmail] = useState('');
@@ -12,8 +17,6 @@ const LogIn = ({navigation}) => {
   const [loading, SetLoading] = useState(false);
 
   const onLogIn = () => {
-    const data = {};
-
     SetLoading(true);
     Firebase.auth()
       .signInWithEmailAndPassword(email, password)
@@ -22,18 +25,25 @@ const LogIn = ({navigation}) => {
           .ref(`users/${res.user.uid}`)
           .once('value')
           .then((res) => {
-            if (res.val()) {
-              SetLoading(false);
-            }
+            SetLoading(false);
+            storeData('user', res.val());
           })
           .catch((err) => {
-            console.log(err);
+            const errmessage = err.message;
+            showMessage({
+              message: errmessage,
+              type: 'danger',
+            });
+            SetLoading(false);
           });
-
         navigation.replace('MainApp');
       })
       .catch((err) => {
-        console.log(err);
+        const errmessage = err.message;
+        showMessage({
+          message: errmessage,
+          type: 'danger',
+        });
         SetLoading(false);
       });
   };
