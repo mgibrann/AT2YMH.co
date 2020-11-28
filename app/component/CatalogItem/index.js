@@ -1,11 +1,13 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, Image, View} from 'react-native';
 
-const CatalogItem = ({photo, title}) => {
+const CatalogItem = ({photo, title, onPress}) => {
   return (
-    <TouchableOpacity style={{marginBottom: 20}}>
-      <Image style={styles.img} source={photo} />
-      <Text style={styles.desc}>{title}</Text>
+    <TouchableOpacity style={{marginBottom: 20}} onPress={onPress}>
+      <Image style={styles.img} source={{uri: photo}} resizeMode="contain" />
+      <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Text style={styles.desc}>{title}</Text>
+      </View>
     </TouchableOpacity>
   );
 };
@@ -13,7 +15,7 @@ const CatalogItem = ({photo, title}) => {
 export default CatalogItem;
 
 const styles = StyleSheet.create({
-  img: {width: 100, height: 100},
+  img: {width: 120, height: 120},
   desc: {
     fontFamily: 'Roboto-Regular',
     fontSize: 14,

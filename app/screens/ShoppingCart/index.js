@@ -1,9 +1,21 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import Header from '../../component/Header';
-import AppleWatch from '../../assets/image/applewatch.png';
+import Firebase from '../../services/Fire';
 
 const ShoppingCart = () => {
+  const [item, SetItem] = useState('');
+
+  useEffect(() => {
+    Firebase.database()
+      .ref('/cart')
+      .on('value', (res) => {
+        const data = res.val();
+        SetItem(data);
+      });
+  }, []);
+
+  console.log(item);
   return (
     <>
       <Header />
@@ -12,15 +24,19 @@ const ShoppingCart = () => {
           <Text style={styles.profile}>Your Cart</Text>
           <View style={styles.border} />
         </View>
-        <View style={styles.card}>
-          <Image source={AppleWatch} style={{borderRadius: 10}} />
-          <View style={{marginLeft: 20, justifyContent: 'center'}}>
-            <Text style={styles.title}>
-              Apple Watch Series 20 wadawd wadawd awdaw
-            </Text>
-            <Text style={styles.price}>$ 288</Text>
-          </View>
-        </View>
+        {item != null
+          ? item.map((res) => {
+              return (
+                <View style={styles.card} key={res.id}>
+                  <Image source={{uri: res.image}} style={{borderRadius: 10}} />
+                  <View style={{marginLeft: 20, justifyContent: 'center'}}>
+                    <Text style={styles.title}>{res.title}</Text>
+                    <Text style={styles.price}>$ {res.price}</Text>
+                  </View>
+                </View>
+              );
+            })
+          : null}
       </View>
     </>
   );
