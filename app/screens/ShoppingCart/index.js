@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import CartItem from '../../component/CartItem';
 import Header from '../../component/Header';
 import Firebase from '../../services/Fire';

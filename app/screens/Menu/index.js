@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Header from '../../component/Header';
 import Item from '../../component/Item';
 import Accessories from '../../assets/image/apple.png';
