@@ -2,6 +2,10 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Header from '../../component/Header';
 import Item from '../../component/Item';
+import Accessories from '../../assets/image/apple.png';
+import Sneakers from '../../assets/image/sneakers.png';
+import Pants from '../../assets/image/pants.png';
+import Clothes from '../../assets/image/clothes.png';
 
 import {LogBox} from 'react-native';
 LogBox.ignoreLogs(['Setting a timer']);
@@ -14,12 +18,12 @@ const Menu = () => {
         <Item larger />
         <View style={{flexDirection: 'column'}}>
           <View style={styles.imgwrap}>
-            <Item title="CLOTHES" />
-            <Item title="PANTS" />
+            <Item title="CLOTHES" photo={Clothes} />
+            <Item title="PANTS" photo={Pants} />
           </View>
           <View style={styles.imgwrap}>
-            <Item title="SNEAKERS" />
-            <Item title="ACCESSORIES" />
+            <Item title="SNEAKERS" photo={Sneakers} />
+            <Item title="ACCESSORIES" photo={Accessories} />
           </View>
           <View style={styles.imgwrap}>
             <Item title="OUTFITS" medium />

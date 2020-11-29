@@ -1,11 +1,10 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, Image, View} from 'react-native';
-import Clothes from '../../assets/image/clothes.png';
 import Outfits from '../../assets/image/outfit.jpg';
 import JumpMan from '../../assets/image/jumpan.png';
 import Airjordan from '../../assets/image/air-jordan.webp';
 
-const Item = ({title, larger, medium, onPress}) => {
+const Item = ({title, larger, medium, onPress, photo}) => {
   if (medium) {
     return (
       <TouchableOpacity onPress={onPress}>
@@ -33,7 +32,7 @@ const Item = ({title, larger, medium, onPress}) => {
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        <Image source={Clothes} style={styles.imgsmall} />
+        <Image source={photo} style={styles.imgsmall} />
         <Text style={styles.imgtxt}>{title}</Text>
       </View>
     </TouchableOpacity>
